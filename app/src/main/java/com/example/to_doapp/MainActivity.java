@@ -1,13 +1,17 @@
 package com.example.to_doapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mLists = new ArrayList<>();
+
+        mLists.add(new TaskList("Test", new ArrayList<>()));
+        mLists.add(new TaskList("Test 2", new ArrayList<>()));
+        mLists.add(new TaskList("Test 3", new ArrayList<>()));
+        mLists.add(new TaskList("Test 4", new ArrayList<>()));
+        mLists.add(new TaskList("Test 5", new ArrayList<>()));
+
         SetupRecyclerview();
     }
 
@@ -31,12 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerview = findViewById(R.id.mainRecyclerView);
         mRecyclerview.setHasFixedSize(true);
 
-        ArrayList<String> lists = new ArrayList();
-        for(int i = 0; i < mLists.size(); i++){
-            lists.add(mLists.get(i).getListName());
-        }
-
-        mAdapter = new ListAdapter(lists, this, findViewById(android.R.id.content).getRootView());
+        mAdapter = new ListAdapter(mLists, this, findViewById(R.id.screen));
         mLayoutManager = new LinearLayoutManager(this);
 
         mRecyclerview.setAdapter(mAdapter);
@@ -45,6 +52,44 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeHelperMain(mAdapter));
         itemTouchHelper.attachToRecyclerView(mRecyclerview);
 
+        //Stop from drawing line at bottom of recyclerView
+        mRecyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL) {
+            @Override
+            public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
+                // Do not draw the divider
+            }
+        });
+
+        // On ViewHolder click
+        mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int postion) {
+
+            }
+        });
+
         mAdapter.notifyDataSetChanged();
+
+        ItemTouchHelper iTH = new ItemTouchHelper(simpleCallback);
+        iTH.attachToRecyclerView(mRecyclerview);
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+
+            Collections.swap(mLists, fromPosition, toPosition);
+
+            recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    };
 }

@@ -10,12 +10,11 @@
     android:layout_marginStart="30dp"
     app:cardBackgroundColor="#FFFFFF"
     app:cardCornerRadius="8dp"
-    app:contentPadding="10dp">
+    app:contentPadding="20dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/list_title"

@@ -19,20 +19,20 @@ public class ListAdapter extends  RecyclerView.Adapter<ListAdapter.ListHolder>{
         void onItemClick(int postion);
     }
 
-    private ArrayList<String> mList;
+    private ArrayList<TaskList> mList;
     private OnItemClickListener mListener;
     private Context mContext;
     private View mActivity;
 
 
-    private String mRecentlyDeletedItem;
+    private TaskList mRecentlyDeletedItem;
     private int mRecentlyDeletedItemPosition;
 
     public void setOnItemClickListener(OnItemClickListener listener){
         mListener = listener;
     }
 
-    public ListAdapter(ArrayList<String> list, Context context, View view){
+    public ListAdapter(ArrayList<TaskList> list, Context context, View view){
         this.mContext = context;
         this.mList = list;
         this.mActivity = view;
@@ -47,7 +47,7 @@ public class ListAdapter extends  RecyclerView.Adapter<ListAdapter.ListHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ListAdapter.ListHolder holder, int position) {
-        String lTitle = mList.get(position);
+        String lTitle = mList.get(position).getListName();
         holder.mTextView.setText(lTitle);
 
         holder.mTextView.setOnClickListener(view -> mListener.onItemClick(position));
@@ -56,7 +56,7 @@ public class ListAdapter extends  RecyclerView.Adapter<ListAdapter.ListHolder>{
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mList.size();
     }
 
     public void deleteItem(int position) {
@@ -75,6 +75,7 @@ public class ListAdapter extends  RecyclerView.Adapter<ListAdapter.ListHolder>{
         View view = mActivity;
         Snackbar snackbar = Snackbar.make(view, R.string.snack_bar_text, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.snack_bar_undo, v -> undoDelete());
+
         snackbar.show();
     }
 
