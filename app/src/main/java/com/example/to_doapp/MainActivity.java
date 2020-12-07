@@ -1,14 +1,18 @@
 package com.example.to_doapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerview;
     private ListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ImageButton addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mLists = new ArrayList<>();
-
         mLists.add(new TaskList("Test", new ArrayList<>()));
         mLists.add(new TaskList("Test 2", new ArrayList<>()));
         mLists.add(new TaskList("Test 3", new ArrayList<>()));
@@ -37,6 +41,17 @@ public class MainActivity extends AppCompatActivity {
         mLists.add(new TaskList("Test 5", new ArrayList<>()));
 
         SetupRecyclerview();
+
+        addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLists.add(new TaskList("New List", new ArrayList<>()));
+                mAdapter.notifyDataSetChanged();
+                //Open list
+                LoadCard(mLists.size() - 1);
+            }
+        });
     }
 
     public void SetupRecyclerview(){
@@ -52,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeHelperMain(mAdapter));
         itemTouchHelper.attachToRecyclerView(mRecyclerview);
 
-        //Stop from drawing line at bottom of recyclerView
+        // Stop from drawing line at bottom of recyclerView
         mRecyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL) {
             @Override
             public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
@@ -74,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         iTH.attachToRecyclerView(mRecyclerview);
     }
 
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0)     {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
             int fromPosition = viewHolder.getAdapterPosition();
@@ -92,4 +107,28 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    public void LoadCard(int position){
+        TaskList item = mLists.get(position);
+        Intent intent = new Intent(this, TaskList.class);
+        intent.putExtra("Card", item);
+        intent.putExtra("APosition", position);
+
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1){
+            if(resultCode == 1){
+                TaskList ci = (TaskList) data.getSerializableExtra("returnCard");
+                int Pos = data.getIntExtra("APos", 0);
+                mLists.set(Pos, ci);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
 }

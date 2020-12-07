@@ -1,14 +1,17 @@
 package com.example.to_doapp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TaskList {
+public class TaskList implements Serializable {
     private String mListName;
     private ArrayList<Task> mTaskList;
+    private boolean mIsHidden;
 
     public TaskList(String name, ArrayList<Task> list) {
         this.mListName = name;
         this.mTaskList = list;
+        this.mIsHidden = false;
     }
 
     public String getListName() {
@@ -25,5 +28,13 @@ public class TaskList {
 
     public void setTaskList(ArrayList<Task> mTaskList) {
         this.mTaskList = mTaskList;
+    }
+
+    public boolean isHidden() {
+        return mIsHidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.mIsHidden = hidden;
     }
 }

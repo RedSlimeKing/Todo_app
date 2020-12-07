@@ -24,7 +24,6 @@ public class ListAdapter extends  RecyclerView.Adapter<ListAdapter.ListHolder>{
     private Context mContext;
     private View mActivity;
 
-
     private TaskList mRecentlyDeletedItem;
     private int mRecentlyDeletedItemPosition;
 

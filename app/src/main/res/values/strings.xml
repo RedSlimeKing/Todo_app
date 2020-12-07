@@ -4,5 +4,6 @@
     <string name="task_desc_hint">Task Description</string>
     <string name="snack_bar_undo">Undo</string>
     <string name="snack_bar_text">Are you sure</string>
+    <string name="list_title">New List</string>
 
 </resources>
