@@ -1,10 +1,12 @@
 package com.example.to_doapp;
 
-public class Task {
+import java.io.Serializable;
+
+public class Task implements Serializable {
     private boolean mIsCompleted;
     private String mTaskDesc;
 
-    public Task(boolean isCompleted, String taskDesc) {
+    public Task(String taskDesc, boolean isCompleted) {
         this.mIsCompleted = isCompleted;
         this.mTaskDesc = taskDesc;
     }

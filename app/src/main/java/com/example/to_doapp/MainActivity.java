@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -20,25 +21,23 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity {
 
     // array of task lists
-    private ArrayList<TaskList> mLists;
+    private static ArrayList<TaskList> mLists;
 
     // RecyclerView setup variables
     private RecyclerView mRecyclerview;
-    private ListAdapter mAdapter;
+    private static ListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ImageButton addButton;
+    private static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mLists = new ArrayList<>();
-        mLists.add(new TaskList("Test", new ArrayList<>()));
-        mLists.add(new TaskList("Test 2", new ArrayList<>()));
-        mLists.add(new TaskList("Test 3", new ArrayList<>()));
-        mLists.add(new TaskList("Test 4", new ArrayList<>()));
-        mLists.add(new TaskList("Test 5", new ArrayList<>()));
+        mLists = FileHelper.LoadTask(this);
+
+        mContext = this;
 
         SetupRecyclerview();
 
@@ -76,12 +75,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // On ViewHolder click
-        mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int postion) {
-
-            }
-        });
+        mAdapter.setOnItemClickListener(postion -> LoadCard(postion));
 
         mAdapter.notifyDataSetChanged();
 
@@ -108,13 +102,25 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    public static void Save(int position, TaskList ci){
+        mLists.set(position, ci);
+        mAdapter.notifyDataSetChanged();
+        FileHelper.WriteData(mContext, mLists);
+    }
+
     public void LoadCard(int position){
         TaskList item = mLists.get(position);
-        Intent intent = new Intent(this, TaskList.class);
+        Intent intent = new Intent(this, TaskListActivity.class);
         intent.putExtra("Card", item);
         intent.putExtra("APosition", position);
 
         startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FileHelper.WriteData(this, mLists);
     }
 
     @Override

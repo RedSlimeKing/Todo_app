@@ -1,11 +1,14 @@
 package com.example.to_doapp;
 
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -14,10 +17,13 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
     private ArrayList<Task> mList;
     private View mActivity;
     private Context mContext;
+    private InputMethodManager imm;
 
     private Task mRecentlyDeletedItem;
     private int mRecentlyDeletedItemPosition;
@@ -26,6 +32,9 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
         this.mList = list;
         this.mActivity = activity;
         this.mContext = context;
+
+        // Get keyboard Reference
+        imm = (InputMethodManager) mContext.getSystemService(INPUT_METHOD_SERVICE);
     }
 
     @NonNull
@@ -38,13 +47,81 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
     @Override
     public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
         Task lTask = mList.get(position);
+        holder.mEditText.setHint("Enter Task");
         holder.mEditText.setText(lTask.getTaskDesc());
         holder.mCheckBox.setChecked(lTask.getisIsCompleted());
+
+        // If completed but not hidden
+        if(lTask.getisIsCompleted()){
+            holder.mEditText.setAlpha(0.3f);
+        } else {
+            holder.mEditText.setAlpha(1.0f);
+        }
+
+        // If First in list is empty call for keyboard
+        if(lTask.getTaskDesc().equals("") && position == 0){
+            holder.mEditText.requestFocus();
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        }
+
+        if(lTask.getTaskDesc().equals("") && position == mList.size() - 1){
+            holder.mCheckBox.setVisibility(View.GONE);
+        }
+
+        holder.mCheckBox.setOnClickListener(view -> {
+            lTask.setIsCompleted(holder.mCheckBox.isChecked());
+            if(lTask.getisIsCompleted()){
+                holder.mEditText.setAlpha(0.3f);
+                holder.mCheckBox.setAlpha(0.3f);
+            } else {
+                holder.mEditText.setAlpha(1.0f);
+                holder.mCheckBox.setAlpha(1.0f);
+            }
+
+            notifyItemChanged(position);
+        });
+
+        holder.mEditText.setOnClickListener(view -> {
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        });
+
+        holder.mEditText.setOnKeyListener((v, keyCode, event) -> {
+            // If the event is a key-down event on the "enter" button
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&  (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                if(!holder.mEditText.getText().toString().equals("")){
+                    lTask.setTaskDesc(holder.mEditText.getText().toString());
+                    holder.mCheckBox.setVisibility(View.VISIBLE);
+                    // Create next input
+                    if(!mList.get(mList.size()-1).getTaskDesc().equals("")){
+                        mList.add(new Task("",false));
+                    }
+                    notifyItemChanged(position);
+                }
+                holder.mEditText.clearFocus();
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                return true;
+            }
+            return false;
+        });
+
+        holder.mEditText.setOnFocusChangeListener((view, hasFocus) -> {
+            if(!hasFocus){
+                lTask.setTaskDesc(holder.mEditText.getText().toString());
+                // Create next input
+                if(!mList.get(mList.size()-1).getTaskDesc().equals("")){
+                    mList.add(new Task("",false));
+                    notifyItemChanged(position);
+                }
+
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mList.size();
     }
 
     public Context getContext(){
@@ -54,7 +131,7 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
     public void toggleCheck(int position){
         Task lTask = mList.get(position);
         lTask.setIsCompleted(!lTask.getisIsCompleted());
-        mList.add(position, lTask);
+        mList.set(position, lTask);
         notifyItemChanged(position);
     }
 
@@ -82,18 +159,11 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
     class TaskHolder extends RecyclerView.ViewHolder{
         private CheckBox mCheckBox;
         private EditText mEditText;
+
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             this.mCheckBox = itemView.findViewById(R.id.checkBox);
             this.mEditText = itemView.findViewById(R.id.editText);
-        }
-
-        public CheckBox getCheckBox() {
-            return mCheckBox;
-        }
-
-        public EditText getEditText() {
-            return mEditText;
         }
     }
 }

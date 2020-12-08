@@ -14,6 +14,10 @@ public class TaskList implements Serializable {
         this.mIsHidden = false;
     }
 
+    public void addTaskItem(Task t){
+        mTaskList.add(t);
+    }
+
     public String getListName() {
         return mListName;
     }

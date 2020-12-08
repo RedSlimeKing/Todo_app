@@ -55,11 +55,14 @@ public class SwipeHelperList  extends ItemTouchHelper.SimpleCallback{
             iconTop = itemView.getTop() + (itemView.getHeight() -  this.toggleIcon.getIntrinsicHeight()) / 2;
             iconBottom = iconTop +  this.toggleIcon.getIntrinsicHeight();
 
-            int iconLeft = itemView.getLeft() + iconMargin + this.toggleIcon.getIntrinsicWidth();
-            int iconRight = itemView.getLeft() + iconMargin;
+            int iconLeft = itemView.getLeft() + iconMargin;
+            int iconRight = itemView.getLeft() + iconMargin + this.toggleIcon.getIntrinsicWidth();
             this.toggleIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
 
             this.toggleBackground.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + ((int) dX) + backgroundCornerOffset, itemView.getBottom());
+
+            this.toggleBackground.draw(c);
+            this.toggleIcon.draw(c);
         } else if (dX < 0) { // Swiping to the left             Delete
             iconMargin = (itemView.getHeight() -  this.deleteIcon.getIntrinsicHeight()) / 2;
             iconTop = itemView.getTop() + (itemView.getHeight() -  this.deleteIcon.getIntrinsicHeight()) / 2;
@@ -70,14 +73,12 @@ public class SwipeHelperList  extends ItemTouchHelper.SimpleCallback{
             this.deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
 
             this.deleteBackground.setBounds(itemView.getRight() + ((int) dX) - backgroundCornerOffset, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+
+            this.deleteBackground.draw(c);
+            this.deleteIcon.draw(c);
         } else { // view is unSwiped
             this.deleteBackground.setBounds(0, 0, 0, 0);
             this.toggleBackground.setBounds(0, 0, 0, 0);
         }
-
-        this.toggleBackground.draw(c);
-        this.toggleIcon.draw(c);
-        this.deleteBackground.draw(c);
-        this.deleteIcon.draw(c);
     }
 }
