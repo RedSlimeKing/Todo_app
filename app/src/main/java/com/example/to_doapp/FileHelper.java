@@ -28,7 +28,7 @@ public class FileHelper {
             item = "HideCompleted" + "[|]" + ci.isHidden();
             saveData.add(item);
             for(Task ti : ci.getTaskList()){
-                item = ti.getTaskDesc() + "[|]" + ti.getisIsCompleted();
+                item = ti.getTaskDesc() + "[|]" + ti.getIsCompleted();
                 saveData.add(item);
             }
         }

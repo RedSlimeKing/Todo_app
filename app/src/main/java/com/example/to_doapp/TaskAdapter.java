@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -16,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -25,15 +25,16 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
     private View mActivity;
     private Context mContext;
     private InputMethodManager imm;
+    private RecyclerView mRecyclerView;
 
     private Task mRecentlyDeletedItem;
     private int mRecentlyDeletedItemPosition;
 
-    public TaskAdapter(ArrayList<Task> list, Context context, View activity){
+    public TaskAdapter(ArrayList<Task> list, Context context, View activity, RecyclerView recyclerView){
         this.mList = list;
         this.mActivity = activity;
         this.mContext = context;
-
+        this.mRecyclerView = recyclerView;
         // Get keyboard Reference
         imm = (InputMethodManager) mContext.getSystemService(INPUT_METHOD_SERVICE);
     }
@@ -50,14 +51,7 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
         Task lTask = mList.get(position);
         holder.mEditText.setHint("Enter Task");
         holder.mEditText.setText(lTask.getTaskDesc());
-        holder.mCheckBox.setChecked(lTask.getisIsCompleted());
-
-        // If completed but not hidden
-        if(lTask.getisIsCompleted()){
-            holder.mEditText.setAlpha(0.3f);
-        } else {
-            holder.mEditText.setAlpha(1.0f);
-        }
+        holder.mCheckBox.setChecked(lTask.getIsCompleted());
 
         // If First in list is empty call for keyboard
         if(lTask.getTaskDesc().equals("") && position == 0){
@@ -66,20 +60,25 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
 
         }
 
+        // If completed but not hidden
+        holder.greyOut(lTask.getIsCompleted());
+        if(TaskListActivity.getHideCompleted() && lTask.getIsCompleted()){
+            holder.hide();
+        } else {
+            holder.show();
+        }
+
+        //If last item remove checkbox
         if(lTask.getTaskDesc().equals("") && position == mList.size() - 1){
             holder.mCheckBox.setVisibility(View.GONE);
         }
 
         holder.mCheckBox.setOnClickListener(view -> {
             lTask.setIsCompleted(holder.mCheckBox.isChecked());
-            if(lTask.getisIsCompleted()){
-                holder.mEditText.setAlpha(0.3f);
-                holder.mCheckBox.setAlpha(0.3f);
-            } else {
-                holder.mEditText.setAlpha(1.0f);
-                holder.mCheckBox.setAlpha(1.0f);
+            holder.greyOut(lTask.getIsCompleted());
+            if(TaskListActivity.getHideCompleted()){
+                holder.hide();
             }
-
             notifyItemChanged(position);
         });
 
@@ -131,7 +130,13 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
 
     public void toggleCheck(int position){
         Task lTask = mList.get(position);
-        lTask.setIsCompleted(!lTask.getisIsCompleted());
+        lTask.setIsCompleted(!lTask.getIsCompleted());
+        TaskHolder holder = (TaskAdapter.TaskHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+        if(lTask.getIsCompleted()){
+            holder.show();
+        } else {
+            holder.hide();
+        }
         mList.set(position, lTask);
         notifyItemChanged(position);
     }
@@ -160,7 +165,7 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
     class TaskHolder extends RecyclerView.ViewHolder{
         public CheckBox mCheckBox;
         public EditText mEditText;
-        public RelativeLayout layout;
+        public ConstraintLayout layout;
         public ViewGroup.LayoutParams params;
 
         public TaskHolder(@NonNull View itemView) {
@@ -173,21 +178,28 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
         }
 
         public void hide(){
-            mCheckBox.setVisibility(View.GONE);
-            mEditText.setVisibility(View.GONE);
+            itemView.setVisibility(View.GONE);
             params.height = 0;
             layout.setLayoutParams(params);
         }
 
         public void show(){
-            mEditText.setVisibility(View.VISIBLE);
+            itemView.setVisibility(View.VISIBLE);
             if(mEditText.getText().toString().equals("")){
                 mCheckBox.setVisibility(View.GONE);
-            } else {
-                mCheckBox.setVisibility(View.VISIBLE);
             }
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             layout.setLayoutParams(params);
+        }
+
+        public void greyOut(boolean isGrey){
+            if(isGrey){
+                mEditText.setAlpha(0.3f);
+                mCheckBox.setAlpha(0.3f);
+            } else {
+                mEditText.setAlpha(1.0f);
+                mCheckBox.setAlpha(1.0f);
+            }
         }
     }
 }

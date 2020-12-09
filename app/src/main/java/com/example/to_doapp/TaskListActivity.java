@@ -70,13 +70,6 @@ public class TaskListActivity extends AppCompatActivity {
             }
         });
 
-        SetupRecyclerview();
-
-        if(mTaskList.getTaskList().size() <= 0){
-            mTaskList.getTaskList().add(new Task("", false));
-            mAdapter.notifyDataSetChanged();
-        }
-
         hideSwitch = findViewById(R.id.switch_comp);
         hideSwitch.setChecked(mHideCompleted);
 
@@ -102,13 +95,20 @@ public class TaskListActivity extends AppCompatActivity {
                 }
             }
         });
+
+        SetupRecyclerview();
+
+        if(mTaskList.getTaskList().size() <= 0){
+            mTaskList.getTaskList().add(new Task("", false));
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     public void SetupRecyclerview(){
         mRecyclerview = findViewById(R.id.recyclerview);
         mRecyclerview.setHasFixedSize(true);
 
-        mAdapter = new TaskAdapter(mTaskList.getTaskList(), this, findViewById(R.id.screen));
+        mAdapter = new TaskAdapter(mTaskList.getTaskList(), this, findViewById(R.id.screen), mRecyclerview);
         mLayoutManager = new LinearLayoutManager(this);
 
         mRecyclerview.setAdapter(mAdapter);
@@ -160,6 +160,10 @@ public class TaskListActivity extends AppCompatActivity {
 
     public static void setHideCompleted(boolean mHideCompleted) {
         TaskListActivity.mHideCompleted = mHideCompleted;
+    }
+
+    public static boolean getHideCompleted() {
+        return TaskListActivity.mHideCompleted;
     }
 
     @Override

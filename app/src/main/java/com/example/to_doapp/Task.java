@@ -19,7 +19,7 @@ public class Task implements Serializable {
         this.mTaskDesc = mTaskDesc;
     }
 
-    public boolean getisIsCompleted() {
+    public boolean getIsCompleted() {
         return mIsCompleted;
     }
 
