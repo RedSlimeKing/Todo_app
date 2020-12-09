@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -157,13 +158,36 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskHolder>{
     }
 
     class TaskHolder extends RecyclerView.ViewHolder{
-        private CheckBox mCheckBox;
-        private EditText mEditText;
+        public CheckBox mCheckBox;
+        public EditText mEditText;
+        public RelativeLayout layout;
+        public ViewGroup.LayoutParams params;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             this.mCheckBox = itemView.findViewById(R.id.checkBox);
             this.mEditText = itemView.findViewById(R.id.editText);
+
+            layout = itemView.findViewById(R.id.parent_layout);
+            params = layout.getLayoutParams();
+        }
+
+        public void hide(){
+            mCheckBox.setVisibility(View.GONE);
+            mEditText.setVisibility(View.GONE);
+            params.height = 0;
+            layout.setLayoutParams(params);
+        }
+
+        public void show(){
+            mEditText.setVisibility(View.VISIBLE);
+            if(mEditText.getText().toString().equals("")){
+                mCheckBox.setVisibility(View.GONE);
+            } else {
+                mCheckBox.setVisibility(View.VISIBLE);
+            }
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            layout.setLayoutParams(params);
         }
     }
 }

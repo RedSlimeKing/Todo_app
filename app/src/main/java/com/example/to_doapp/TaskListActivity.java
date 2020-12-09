@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.Collections;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +29,7 @@ public class TaskListActivity extends AppCompatActivity {
     private static boolean mHideCompleted;
     private EditText mListName;
     private InputMethodManager imm;
+    private Switch hideSwitch;
 
     private RecyclerView mRecyclerview;
     private TaskAdapter mAdapter;
@@ -72,6 +76,32 @@ public class TaskListActivity extends AppCompatActivity {
             mTaskList.getTaskList().add(new Task("", false));
             mAdapter.notifyDataSetChanged();
         }
+
+        hideSwitch = findViewById(R.id.switch_comp);
+        hideSwitch.setChecked(mHideCompleted);
+
+        hideSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                TaskListActivity.setHideCompleted(isChecked);
+                if(mHideCompleted) {
+                    for (int pos = 0; pos < mAdapter.getItemCount(); pos++) {
+                        TaskAdapter.TaskHolder holder = (TaskAdapter.TaskHolder) mRecyclerview.findViewHolderForAdapterPosition(pos);
+                        if(holder != null){
+                            if (holder.mCheckBox.isChecked()) {
+                                holder.hide();
+                            }
+                        }
+                    }
+                } else {
+                    for (int pos = 0; pos < mAdapter.getItemCount(); pos++) {
+                        TaskAdapter.TaskHolder holder = (TaskAdapter.TaskHolder) mRecyclerview.findViewHolderForAdapterPosition(pos);
+                        if(holder != null) holder.show();
+                    }
+
+                }
+            }
+        });
     }
 
     public void SetupRecyclerview(){
@@ -128,7 +158,7 @@ public class TaskListActivity extends AppCompatActivity {
         }
     };
 
-    public static void setmHideCompleted(boolean mHideCompleted) {
+    public static void setHideCompleted(boolean mHideCompleted) {
         TaskListActivity.mHideCompleted = mHideCompleted;
     }
 

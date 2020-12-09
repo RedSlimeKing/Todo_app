@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TaskListActivity"
-    android:clickable="true"
     android:focusableInTouchMode="true"
     tools:ignore="ExtraText">-
 
@@ -22,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Switch
-            android:id="@+id/switch1"
+            android:id="@+id/switch_comp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleY="1.3"
@@ -44,11 +43,12 @@
             android:text="@string/list_title"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/switch1"
+            app:layout_constraintEnd_toStartOf="@+id/switch_comp"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TextViewEdits" />
+            tools:ignore="LabelFor,TextViewEdits"
+            android:importantForAutofill="no" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
