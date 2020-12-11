@@ -20,8 +20,8 @@ public class SwipeHelperMain extends ItemTouchHelper.SimpleCallback {
     public SwipeHelperMain(ListAdapter adapter) {
         super(0,ItemTouchHelper.LEFT);
         mAdapter = adapter;
-        icon = ContextCompat.getDrawable(mAdapter.getContext(), R.drawable.ic_delete_24);
-        background = new ColorDrawable(Color.RED);
+        icon = ContextCompat.getDrawable(mAdapter.getContext(), R.drawable.ic_delete);
+        background = new ColorDrawable(Color.parseColor("#ebebeb"));
     }
 
     @Override

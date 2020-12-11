@@ -2,6 +2,8 @@ package com.example.to_doapp;
 
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,6 +19,7 @@ import java.util.Collections;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -72,6 +75,8 @@ public class TaskListActivity extends AppCompatActivity {
 
         hideSwitch = findViewById(R.id.switch_comp);
         hideSwitch.setChecked(mHideCompleted);
+
+        hideSwitch.getTrackDrawable().setColorFilter(Color.parseColor("#595251"), PorterDuff.Mode.SRC_IN);
 
         hideSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

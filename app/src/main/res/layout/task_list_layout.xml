@@ -5,8 +5,9 @@
     android:id="@+id/screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TaskListActivity"
+    android:background="#ebebeb"
     android:focusableInTouchMode="true"
+    tools:context=".TaskListActivity"
     tools:ignore="ExtraText">-
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,35 +21,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Switch
-            android:id="@+id/switch_comp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleY="1.3"
-            android:switchMinWidth="70dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
-
         <EditText
             android:id="@+id/title_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
+            android:fontFamily="@font/public_sans_bold"
+            android:importantForAutofill="no"
             android:inputType="textMultiLine|text|textCapSentences"
             android:isScrollContainer="false"
             android:text="@string/list_title"
+            android:textColor="#000000"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/switch_comp"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="LabelFor,TextViewEdits"
-            android:importantForAutofill="no" />
+            tools:ignore="LabelFor,TextViewEdits" />
+
+        <Switch
+            android:id="@+id/switch_comp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleY="1.3"
+            android:switchMinWidth="60dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

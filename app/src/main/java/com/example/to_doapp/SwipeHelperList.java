@@ -20,10 +20,10 @@ public class SwipeHelperList  extends ItemTouchHelper.SimpleCallback{
     public SwipeHelperList(TaskAdapter adapter) {
         super(0, ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT);
         this.mAdapter = adapter;
-        this.deleteIcon = ContextCompat.getDrawable(mAdapter.getContext(), R.drawable.ic_delete_24);
-        this.deleteBackground = new ColorDrawable(Color.RED);
+        this.deleteIcon = ContextCompat.getDrawable(mAdapter.getContext(), R.drawable.ic_delete);
+        this.deleteBackground = new ColorDrawable(Color.parseColor("#ebebeb"));
 
-        this.toggleIcon = ContextCompat.getDrawable(mAdapter.getContext(), R.drawable.ic_delete_24);
+        this.toggleIcon = ContextCompat.getDrawable(mAdapter.getContext(), R.drawable.ic_check);
         this.toggleBackground = new ColorDrawable(Color.GREEN);
     }
 

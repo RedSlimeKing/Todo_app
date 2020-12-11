@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
+            android:fontFamily="@font/public_sans_bold"
             android:importantForAutofill="no"
             android:inputType="textMultiLine|textCapSentences"
             android:textColor="#000000"
@@ -31,7 +32,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TextViewEdits"/>
+            tools:ignore="TextViewEdits" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
