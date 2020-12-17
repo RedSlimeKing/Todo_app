@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
@@ -24,6 +25,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG;
 
 public class TaskListActivity extends AppCompatActivity {
 
@@ -160,6 +163,20 @@ public class TaskListActivity extends AppCompatActivity {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
+        }
+
+        @Override
+        public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+            super.onSelectedChanged(viewHolder, actionState);
+            if (actionState == ACTION_STATE_DRAG) {
+                viewHolder.itemView.setAlpha(0.5f);
+            }
+        }
+
+        @Override
+        public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            super.clearView(recyclerView, viewHolder);
+            viewHolder.itemView.setAlpha(1.0f);
         }
     };
 

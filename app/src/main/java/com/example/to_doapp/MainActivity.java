@@ -18,6 +18,8 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG;
+
 public class MainActivity extends AppCompatActivity {
 
     // array of task lists
@@ -99,6 +101,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
+        }
+        @Override
+        public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+            super.onSelectedChanged(viewHolder, actionState);
+            if (actionState == ACTION_STATE_DRAG) {
+                viewHolder.itemView.setAlpha(0.5f);
+            }
+        }
+
+        @Override
+        public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            super.clearView(recyclerView, viewHolder);
+            viewHolder.itemView.setAlpha(1.0f);
         }
     };
 

@@ -21,7 +21,7 @@ public class SwipeHelperList  extends ItemTouchHelper.SimpleCallback{
         super(0, ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT);
         this.mAdapter = adapter;
         this.deleteIcon = ContextCompat.getDrawable(mAdapter.getContext(), R.drawable.ic_delete);
-        this.deleteBackground = new ColorDrawable(Color.parseColor("#ebebeb"));
+        this.deleteBackground = new ColorDrawable(Color.RED);
 
         this.toggleIcon = ContextCompat.getDrawable(mAdapter.getContext(), R.drawable.ic_check);
         this.toggleBackground = new ColorDrawable(Color.GREEN);
@@ -72,7 +72,7 @@ public class SwipeHelperList  extends ItemTouchHelper.SimpleCallback{
             int iconRight = itemView.getRight() - iconMargin;
             this.deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
 
-            this.deleteBackground.setBounds(itemView.getRight() + ((int) dX) - backgroundCornerOffset, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+            this.deleteBackground.setBounds(itemView.getRight() + ((int) dX), itemView.getTop(), itemView.getRight(), itemView.getBottom());
 
             this.deleteBackground.draw(c);
             this.deleteIcon.draw(c);
